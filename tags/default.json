@@ -1,0 +1,10 @@
+[
+    {
+        "Key": "Purpose",
+        "Value": "Demo"
+    },
+    {
+        "Key": "Source",
+        "Value": "https://github.com/ArjenSchwarz/workshop-cfn-eventbridge"
+    }
+]

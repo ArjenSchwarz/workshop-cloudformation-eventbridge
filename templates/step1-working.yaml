@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation and EventBridge workshop step 1
+Parameters:
+  AlertEmailAddress:
+    Type: String
+    Description: The emeail address the alerts should be sent to
+Resources:
+  AlertSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref AlertEmailAddress
+          Protocol: "email"
+      TopicName: "CloudFormationAlertsStep1"
+  AlertSNSTopicPolicy:
+    Type: 'AWS::SNS::TopicPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: 'sns:Publish'
+            Resource: '*'
+      Topics:
+        - !Ref AlertSNSTopic
+  CloudFormationFailuresRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: CloudFormationFailedDeployments
+      Description: "Notify on failed CloudFormation deployments"
+      EventPattern:
+        source:
+          - "aws.cloudformation"
+        detail-type:
+          - "CloudFormation Stack Status Change"
+        detail:
+          status-details:
+            status:
+              - "ROLLBACK_IN_PROGRESS"
+              - "UPDATE_ROLLBACK_IN_PROGRESS"
+              - "IMPORT_ROLLBACK_IN_PROGRESS"
+      State: "ENABLED"
+      Targets:
+        - Arn: !Ref AlertSNSTopic
+          Id: "SNSAlerts"
+
+Outputs:
+  SNSTopic:
+    Description: The ARN of the SNS topic that is used for notifications
+    Value: !Ref AlertSNSTopic

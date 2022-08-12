@@ -1,0 +1,6 @@
+output: table
+table:
+  style: ColoredBlackOnMagentaWhite
+  max-column-width: 50
+changeset:
+  name-format: fog-$TIMESTAMP
