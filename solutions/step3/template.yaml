@@ -1,0 +1,75 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  step3
+
+  Sample SAM Template for step3
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 60
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello_world/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Policies:
+        - ReadOnlyAccess
+        - Statement:
+          - Sid: CloudFormationAccess
+            Effect: Allow
+            Action:
+              - cloudformation:DetectStackDrift
+              - cloudformation:DetectStackResourceDrift
+            Resource: !Sub "arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/*"
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 1 * * ? *)
+            Description: Sample Lambda function scheduling with SAM
+            Enabled: true
+
+  AlertSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: "demo+pt2022@ig.nore.me"
+          Protocol: "email"
+      TopicName: "CloudFormationAlertsStep1"
+  AlertSNSTopicPolicy:
+    Type: 'AWS::SNS::TopicPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: 'sns:Publish'
+            Resource: '*'
+      Topics:
+        - !Ref AlertSNSTopic
+  CloudFormationFailuresRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: CloudFormationDriftDetected
+      Description: "Notify on CloudFormation drift"
+      EventPattern:
+        source:
+          - "aws.cloudformation"
+        detail-type:
+          - "CloudFormation Drift Detection Status Change"
+        detail:
+          status-details:
+            stack-drift-status:
+              - "DRIFTED"
+      State: "ENABLED"
+      Targets:
+        - Arn: !Ref AlertSNSTopic
+          Id: "SNSAlerts"

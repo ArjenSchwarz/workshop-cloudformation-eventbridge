@@ -4,9 +4,10 @@ In this first step we'll create an alert if a CloudFormation stack fails. In fac
 
 ## The solution
 
-While you'll get more out of this if you do the work yourself, a working CloudFormation template containing the complete stack for step1 can be found at [step1-working.yaml](templates/step1-working.yaml). If you use the Makefile to deploy it, you will need to update the parameters in [step1-working.json](parameters/step1-working.json) first and make sure you have [fog](https://github.com/ArjenSchwarz/fog) present in your path.
+While you'll get more out of this if you do the work yourself, a working CloudFormation template containing the complete stack for step1 can be found at [solutions/step1.yaml](templates/step1-working.yaml). You will need to replace the `{{PUT YOUR EMAIL HERE}}` placeholder with your own email address. If you wish to use the Makefile to deploy it, you will need to make sure you have [fog](https://github.com/ArjenSchwarz/fog) present in your path. However, it's just a regular CloudFormation template so you can deploy it any way you see fit.
 
-In addition, this first step will have the partial solutions shown inside the document.
+In addition, for this step only, solutions to each section are provided inside the section.
+
 
 ## 1.1 Create an SNS topic
 
@@ -81,7 +82,7 @@ Because of the way statusses work in CloudFormation, the above only works for de
 
 ## 1.4 Time to test it works
 
-A test stack is located in [templates/step1-teststack.yaml](templates/step1-teststack.yaml). This stack will attempt to create an S3 bucket with an existing name and therefore will fail. Deploy this however you want. If you wish to use the Makefile and have fog installed you can do so using `make step1-test`.
+A test stack is located in [solutions/step1-teststack.yaml](solutions/step1-teststack.yaml). This stack will attempt to create an S3 bucket with an existing name and therefore will fail. Deploy this using the command line or in the Console. If you wish to use the Makefile and have fog installed you can do so using `make step1-test`.
 
 When you deploy this step you will notice it fails and you should receive an email about that.
 

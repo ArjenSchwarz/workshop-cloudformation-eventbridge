@@ -1,15 +1,11 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: CloudFormation and EventBridge workshop step 1
-Parameters:
-  AlertEmailAddress:
-    Type: String
-    Description: The emeail address the alerts should be sent to
 Resources:
   AlertSNSTopic:
     Type: AWS::SNS::Topic
     Properties:
       Subscription:
-        - Endpoint: !Ref AlertEmailAddress
+        - Endpoint: "{{PUT YOUR EMAIL HERE}}"
           Protocol: "email"
       TopicName: "CloudFormationAlertsStep1"
   AlertSNSTopicPolicy:

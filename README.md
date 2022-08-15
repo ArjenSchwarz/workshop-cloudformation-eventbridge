@@ -20,16 +20,12 @@ The below are demos that show some of the things that you can do and will teach 
 
 ### Step 1
 
-Send a message through SNS when a stack deployment starts failing.
+Send a message through SNS when a stack deployment starts failing. Go to [step1](./step1.md).
 
 ### Step 2
 
-Send a message through SNS when a stack is deleted.
+Create a report about the deployment after it's finished deploying, and store this on S3. Go to [step2](./step2.md).
 
 ### Step 3
 
-Create a report about the deployment after it's finished deploying, and store this on S3.
-
-### Step 4
-
-Run drift detection on a schedule, and trigger a notification when drift is detected.
+Run drift detection on a schedule, and trigger a notification when drift is detected. Go to [step3](./step3.md).
